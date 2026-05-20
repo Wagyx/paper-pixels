@@ -35,6 +35,21 @@ export class EditorApplication {
     this.refresh();
   }
 
+  onActivePieceConfigChange() {
+    this.variantPicker.updateAllButtonThumbs();
+    this.refresh();
+  }
+
+  isKeyboardTargetEditable(target) {
+    const tag = target.tagName;
+    return (
+      tag === "INPUT" ||
+      tag === "TEXTAREA" ||
+      tag === "SELECT" ||
+      target.isContentEditable
+    );
+  }
+
   refresh() {
     this.state.syncPlacementPreviewWithActive();
     this.viz.render({
@@ -160,8 +175,7 @@ export class EditorApplication {
       (e) => {
         e.preventDefault();
         if (this.state.cycleActiveVariant(e.deltaY > 0 ? 1 : -1)) {
-          this.variantPicker.updateAllButtonThumbs();
-          this.refresh();
+          this.onActivePieceConfigChange();
         }
       },
       { passive: false }
@@ -179,17 +193,40 @@ export class EditorApplication {
 
   bindKeyboard() {
     window.addEventListener("keydown", (e) => {
+      if (this.isKeyboardTargetEditable(e.target)) return;
+
       if (e.key === "Delete" || e.key === "Backspace") {
         if (this.state.selectedIds.size > 0) {
           e.preventDefault();
           this.state.deleteSelected();
           this.refresh();
         }
+        return;
       }
+
       if (e.key === "Escape") {
         this.variantPicker.close();
         this.state.clearSelection();
         this.refresh();
+        return;
+      }
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        const direction = e.key === "ArrowRight" ? 1 : -1;
+        if (this.state.cycleActiveType(direction)) {
+          this.variantPicker.close();
+          this.onActivePieceConfigChange();
+        }
+        return;
+      }
+
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+        const direction = e.key === "ArrowDown" ? 1 : -1;
+        if (this.state.cycleActiveVariant(direction)) {
+          this.onActivePieceConfigChange();
+        }
       }
     });
   }

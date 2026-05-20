@@ -116,7 +116,8 @@ export function buildPieceGroup(piece, options = {}) {
 
   g.append(body);
 
-  if (showConnectors) {
+  const showPreviewConnectors = !isPreview || previewValid;
+  if (showConnectors && showPreviewConnectors) {
     const { female, male } = createConnectorElements(
       piece,
       piece.color,

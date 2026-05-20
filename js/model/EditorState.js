@@ -1,4 +1,10 @@
-import { CELL, MAX_ZOOM, MIN_ZOOM, PIECE_TYPES } from "../config.js";
+import {
+  CELL,
+  MAX_ZOOM,
+  MIN_ZOOM,
+  PIECE_TYPE_ORDER,
+  PIECE_TYPES,
+} from "../config.js";
 import { validateConnectorAdjacency } from "./connectorCompatibility.js";
 
 export class EditorState {
@@ -33,6 +39,18 @@ export class EditorState {
     const current = this.getActiveVariantIndex();
     const next = (current + direction + count) % count;
     this.setActiveVariant(this.activeType, next);
+    return true;
+  }
+
+  cycleActiveType(direction) {
+    const index = PIECE_TYPE_ORDER.indexOf(this.activeType);
+    if (index < 0) return false;
+    const next =
+      PIECE_TYPE_ORDER[
+        (index + direction + PIECE_TYPE_ORDER.length) %
+          PIECE_TYPE_ORDER.length
+      ];
+    this.setActiveType(next);
     return true;
   }
 
@@ -188,8 +206,9 @@ export class EditorState {
   }
 
   setActiveType(type) {
+    if (!PIECE_TYPES[type]) return;
     this.activeType = type;
-    this.clearSelection();
+    this.selectedIds.clear();
   }
 
   selectPiece(id, addToSelection = false) {

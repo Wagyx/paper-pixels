@@ -12,6 +12,9 @@ export const BACKGROUND_COLOR = "#f4efe6";
  * top (left→right), right (top→bottom), bottom (right→left), left (bottom→top).
  * 1 = male (outward tab), 0 = female (inward notch).
  */
+/** Toolbar / keyboard cycling order for piece types. */
+export const PIECE_TYPE_ORDER = ["2x2", "2x1", "1x2", "1x1"];
+
 export const PIECE_TYPES = {
   "2x2": {
     w: 2,

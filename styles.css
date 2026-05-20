@@ -379,10 +379,6 @@ body {
   visibility: hidden;
 }
 
-.piece-preview-group.invalid .connector-female {
-  fill: rgba(200, 80, 80, 0.2);
-}
-
 .viewport-controls {
   position: absolute;
   top: 1rem;
