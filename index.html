@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Pixels — Grid Editor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="toolbar">
+      <h1 class="logo">Paper Pixels</h1>
+      <div class="piece-selector" role="group" aria-label="Piece type">
+        <button type="button" class="piece-btn active" data-type="2x2" title="2×2 — choose connector variant">
+          <span class="piece-thumb" aria-hidden="true"></span>
+          <span class="piece-label">2×2</span>
+        </button>
+        <button type="button" class="piece-btn" data-type="2x1" title="2×1 — choose connector variant">
+          <span class="piece-thumb" aria-hidden="true"></span>
+          <span class="piece-label">2×1</span>
+        </button>
+        <button type="button" class="piece-btn" data-type="1x2" title="1×2 — choose connector variant">
+          <span class="piece-thumb" aria-hidden="true"></span>
+          <span class="piece-label">1×2</span>
+        </button>
+        <button type="button" class="piece-btn" data-type="1x1" title="1×1 — choose connector variant">
+          <span class="piece-thumb" aria-hidden="true"></span>
+          <span class="piece-label">1×1</span>
+        </button>
+      </div>
+      <div class="selection-tools hidden" id="selectionTools">
+        <label class="color-label">
+          Color
+          <input type="color" id="colorPicker" value="#e85d5d">
+        </label>
+        <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+      </div>
+      <p class="hint">Place with left click · Select pieces · Drag to move · Right drag to pan · Scroll to zoom</p>
+    </header>
+
+    <main class="viewport-wrap">
+      <svg id="gridSvg" class="grid-svg" aria-label="Grid editor">
+        <g id="world">
+          <g id="gridLayer" class="grid-layer"></g>
+          <g id="piecesLayer" class="pieces-layer">
+            <g id="piecesBodiesLayer" class="pieces-bodies-layer"></g>
+            <g id="piecesFemaleConnectorsLayer" class="pieces-female-layer"></g>
+            <g id="piecesMaleConnectorsLayer" class="pieces-male-layer"></g>
+            <g id="piecesRingsLayer" class="pieces-rings-layer"></g>
+          </g>
+          <g id="previewLayer" class="preview-layer"></g>
+        </g>
+      </svg>
+      <div class="viewport-controls">
+        <button type="button" class="btn btn-float" id="recenterBtn" title="Center view on all pieces">
+          Recenter
+        </button>
+        <label class="view-option view-option-float">
+          <input type="checkbox" id="showGrid" checked>
+          Show grid
+        </label>
+        <label class="view-option view-option-float">
+          <input type="checkbox" id="showConnectors" checked>
+          Show connectors
+        </label>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
