@@ -13,20 +13,15 @@ export class PieceVariantPicker {
     this.onChange = onChange;
     this.openType = null;
 
-    this.dropdown = document.createElement("div");
-    this.dropdown.id = "variantDropdown";
-    this.dropdown.className = "variant-dropdown hidden";
-    this.dropdown.setAttribute("role", "listbox");
-    this.dropdown.innerHTML = `
-      <p class="variant-dropdown-title"></p>
-      <div class="variant-dropdown-list"></div>
-    `;
-    this.titleEl = this.dropdown.querySelector(".variant-dropdown-title");
-    this.listEl = this.dropdown.querySelector(".variant-dropdown-list");
-    document.body.appendChild(this.dropdown);
+    const panel = document.querySelector(".piece-panel");
+    this.variantStrip = document.createElement("div");
+    this.variantStrip.id = "variantStrip";
+    this.variantStrip.className = "variant-strip hidden";
+    this.variantStrip.setAttribute("role", "listbox");
+    this.variantStrip.setAttribute("aria-label", "Connector variant");
+    panel?.appendChild(this.variantStrip);
 
     this.bindButtons();
-    this.bindDismiss();
     this.updateAllButtonThumbs();
   }
 
@@ -38,47 +33,46 @@ export class PieceVariantPicker {
         const def = PIECE_TYPES[type];
 
         if (def.variants.length === 1) {
+          this.openType = null;
+          this.hideVariantStrip();
           this.selectVariant(type, 0);
           return;
         }
 
         if (this.openType === type) {
-          this.close();
+          this.openType = null;
+          this.hideVariantStrip();
+          this.syncActiveButtons();
           return;
         }
 
-        this.open(type, btn);
+        this.openType = type;
+        this.state.setActiveType(type);
+        this.renderVariantStrip(type);
+        this.syncActiveButtons();
+        this.onChange();
       });
     });
   }
 
-  bindDismiss() {
-    document.addEventListener("mousedown", (e) => {
-      if (this.dropdown.classList.contains("hidden")) return;
-      const inDropdown = this.dropdown.contains(e.target);
-      const onButton = [...this.pieceButtons].some((b) => b.contains(e.target));
-      if (!inDropdown && !onButton) this.close();
-    });
-
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") this.close();
-    });
-
-    window.addEventListener("resize", () => {
-      if (this.openType) {
-        const btn = [...this.pieceButtons].find(
-          (b) => b.dataset.type === this.openType
-        );
-        if (btn) this.positionDropdown(btn);
-      }
-    });
+  hideVariantStrip() {
+    if (!this.variantStrip) return;
+    this.variantStrip.classList.add("hidden");
+    this.variantStrip.replaceChildren();
   }
 
-  open(type, anchorBtn) {
+  renderVariantStrip(type) {
+    if (!this.variantStrip) return;
+
     const def = PIECE_TYPES[type];
-    this.openType = type;
-    this.titleEl.textContent = type.replace("x", "×");
-    this.listEl.replaceChildren();
+    this.variantStrip.replaceChildren();
+
+    if (!def || def.variants.length <= 1) {
+      this.hideVariantStrip();
+      return;
+    }
+
+    this.variantStrip.classList.remove("hidden");
 
     def.variants.forEach((variant, index) => {
       const option = document.createElement("button");
@@ -86,6 +80,8 @@ export class PieceVariantPicker {
       option.className = "variant-option";
       option.setAttribute("role", "option");
       option.dataset.variantIndex = String(index);
+      option.title = variant.name;
+      option.setAttribute("aria-label", variant.name);
 
       const isActive =
         this.state.activeType === type &&
@@ -96,42 +92,26 @@ export class PieceVariantPicker {
       const previewWrap = document.createElement("span");
       previewWrap.className = "variant-option-preview";
       previewWrap.appendChild(createVariantPreviewSvg(type, index));
+      option.append(previewWrap);
 
-      const label = document.createElement("span");
-      label.className = "variant-option-label";
-      label.textContent = variant.name;
-
-      option.append(previewWrap, label);
       option.addEventListener("click", (ev) => {
         ev.stopPropagation();
         this.selectVariant(type, index);
       });
 
-      this.listEl.appendChild(option);
+      this.variantStrip.appendChild(option);
     });
-
-    this.dropdown.classList.remove("hidden");
-    this.positionDropdown(anchorBtn);
-  }
-
-  positionDropdown(anchorBtn) {
-    const rect = anchorBtn.getBoundingClientRect();
-    const gap = 6;
-    this.dropdown.style.left = `${rect.left}px`;
-    this.dropdown.style.top = `${rect.bottom + gap}px`;
-    this.dropdown.style.minWidth = `${Math.max(rect.width, 160)}px`;
   }
 
   close() {
     this.openType = null;
-    this.dropdown.classList.add("hidden");
+    this.hideVariantStrip();
   }
 
   selectVariant(type, variantIndex) {
     this.state.setActiveVariant(type, variantIndex);
     this.state.setActiveType(type);
     this.updateAllButtonThumbs();
-    this.close();
     this.onChange();
   }
 
@@ -146,6 +126,9 @@ export class PieceVariantPicker {
 
   updateAllButtonThumbs() {
     this.pieceButtons.forEach((btn) => this.updateButtonThumb(btn));
+    if (this.openType) {
+      this.renderVariantStrip(this.openType);
+    }
   }
 
   syncActiveButtons() {

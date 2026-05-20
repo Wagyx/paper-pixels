@@ -24,24 +24,6 @@
         <span class="logo-title">Paper Pixels</span>
         <span class="logo-version" id="appVersion"></span>
       </h1>
-      <div class="piece-selector" role="group" aria-label="Piece type">
-        <button type="button" class="piece-btn active" data-type="2x2" title="2×2 — choose connector variant">
-          <span class="piece-thumb" aria-hidden="true"></span>
-          <span class="piece-label">2×2</span>
-        </button>
-        <button type="button" class="piece-btn" data-type="2x1" title="2×1 — choose connector variant">
-          <span class="piece-thumb" aria-hidden="true"></span>
-          <span class="piece-label">2×1</span>
-        </button>
-        <button type="button" class="piece-btn" data-type="1x2" title="1×2 — choose connector variant">
-          <span class="piece-thumb" aria-hidden="true"></span>
-          <span class="piece-label">1×2</span>
-        </button>
-        <button type="button" class="piece-btn" data-type="1x1" title="1×1 — choose connector variant">
-          <span class="piece-thumb" aria-hidden="true"></span>
-          <span class="piece-label">1×1</span>
-        </button>
-      </div>
       <div class="selection-tools hidden" id="selectionTools">
         <label class="color-label">
           Color
@@ -49,15 +31,30 @@
         </label>
         <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
       </div>
-      <div class="io-tools">
-        <button type="button" class="btn" id="exportBtn" title="Download layout as JSON">Export</button>
-        <button type="button" class="btn" id="importBtn" title="Load layout from JSON file">Import</button>
-        <input type="file" id="importFileInput" class="sr-only" accept=".json,application/json" aria-hidden="true" tabindex="-1">
-      </div>
       <p class="hint">Place with left click · Select pieces · Drag to move · Right drag to pan · Ctrl+right drag to zoom · Scroll or ↑↓ for variant · ←→ for piece type</p>
     </header>
 
     <main class="viewport-wrap">
+      <div class="piece-panel">
+        <div class="piece-selector" role="group" aria-label="Piece type">
+          <button type="button" class="piece-btn active" data-type="2x2" title="2×2 — choose connector variant">
+            <span class="piece-thumb" aria-hidden="true"></span>
+            <span class="piece-label">2×2</span>
+          </button>
+          <button type="button" class="piece-btn" data-type="2x1" title="2×1 — choose connector variant">
+            <span class="piece-thumb" aria-hidden="true"></span>
+            <span class="piece-label">2×1</span>
+          </button>
+          <button type="button" class="piece-btn" data-type="1x2" title="1×2 — choose connector variant">
+            <span class="piece-thumb" aria-hidden="true"></span>
+            <span class="piece-label">1×2</span>
+          </button>
+          <button type="button" class="piece-btn" data-type="1x1" title="1×1 — choose connector variant">
+            <span class="piece-thumb" aria-hidden="true"></span>
+            <span class="piece-label">1×1</span>
+          </button>
+        </div>
+      </div>
       <svg id="gridSvg" class="grid-svg" aria-label="Grid editor">
         <g id="world">
           <g id="gridLayer" class="grid-layer"></g>
@@ -82,6 +79,11 @@
           <input type="checkbox" id="showConnectors" checked>
           Show connectors
         </label>
+        <div class="io-tools">
+          <button type="button" class="btn btn-float" id="exportBtn" title="Download layout as JSON">Export</button>
+          <button type="button" class="btn btn-float" id="importBtn" title="Load layout from JSON file">Import</button>
+          <input type="file" id="importFileInput" class="sr-only" accept=".json,application/json" aria-hidden="true" tabindex="-1">
+        </div>
       </div>
     </main>
   </div>
