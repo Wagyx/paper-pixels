@@ -30,6 +30,7 @@ new EditorApplication(state, visualization, {
   svg: document.getElementById("gridSvg"),
   pieceButtons: document.querySelectorAll(".piece-btn"),
   selectionTools: document.getElementById("selectionTools"),
+  colorPanel: document.getElementById("colorPanel"),
   colorPicker: document.getElementById("colorPicker"),
   deleteBtn: document.getElementById("deleteBtn"),
   recenterBtn: document.getElementById("recenterBtn"),

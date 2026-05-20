@@ -25,16 +25,13 @@
         <span class="logo-version" id="appVersion"></span>
       </h1>
       <div class="selection-tools hidden" id="selectionTools">
-        <label class="color-label">
-          Color
-          <input type="color" id="colorPicker" value="#e85d5d">
-        </label>
         <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
       </div>
       <p class="hint">Place with left click · Select pieces · Drag to move · Right drag to pan · Ctrl+right drag to zoom · Scroll or ↑↓ for variant · ←→ for piece type</p>
     </header>
 
     <main class="viewport-wrap">
+      <div class="canvas-panels">
       <div class="piece-panel">
         <div class="piece-selector" role="group" aria-label="Piece type">
           <button type="button" class="piece-btn active" data-type="2x2" title="2×2 — choose connector variant">
@@ -54,6 +51,13 @@
             <span class="piece-label">1×1</span>
           </button>
         </div>
+      </div>
+      <div class="color-panel hidden" id="colorPanel">
+        <label class="color-label">
+          Color
+          <input type="color" id="colorPicker" value="#e85d5d" title="Color for selected pieces">
+        </label>
+      </div>
       </div>
       <svg id="gridSvg" class="grid-svg" aria-label="Grid editor">
         <g id="world">

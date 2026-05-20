@@ -68,13 +68,15 @@ export class EditorApplication {
   }
 
   updateToolbarUI() {
-    const { selectionTools, colorPicker } = this.ui;
+    const { selectionTools, colorPanel, colorPicker } = this.ui;
     if (this.state.selectedIds.size > 0) {
       selectionTools.classList.remove("hidden");
+      colorPanel.classList.remove("hidden");
       const color = this.state.getSelectedColor();
       if (color) colorPicker.value = color;
     } else {
       selectionTools.classList.add("hidden");
+      colorPanel.classList.add("hidden");
     }
 
     this.variantPicker.syncActiveButtons();
