@@ -9,6 +9,9 @@ export class EditorApplication {
     this.isPanning = false;
     this.panStart = { x: 0, y: 0, camX: 0, camY: 0 };
 
+    this.isZooming = false;
+    this.zoomStart = { y: 0, zoom: 1, anchorX: 0, anchorY: 0 };
+
     this.isDraggingPieces = false;
     this.dragStartGrid = null;
     this.dragPieceStarts = null;
@@ -33,6 +36,7 @@ export class EditorApplication {
   }
 
   refresh() {
+    this.state.syncPlacementPreviewWithActive();
     this.viz.render({
       pieces: this.state.pieces,
       selectedIds: this.state.selectedIds,
@@ -72,6 +76,9 @@ export class EditorApplication {
       deleteBtn,
       showConnectorsCheckbox,
       showGridCheckbox,
+      exportBtn,
+      importBtn,
+      importFileInput,
     } = this.ui;
 
     showGridCheckbox.addEventListener("change", () => {
@@ -99,6 +106,48 @@ export class EditorApplication {
       this.state.deleteSelected();
       this.refresh();
     });
+
+    exportBtn.addEventListener("click", () => this.exportLayout());
+
+    importBtn.addEventListener("click", () => importFileInput.click());
+
+    importFileInput.addEventListener("change", () => {
+      const file = importFileInput.files?.[0];
+      importFileInput.value = "";
+      if (!file) return;
+      this.importLayoutFromFile(file);
+    });
+  }
+
+  exportLayout() {
+    const data = this.state.exportLayout();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "paper-pixels-layout.json";
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  importLayoutFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!this.state.importLayout(data)) {
+          window.alert("Invalid layout file.");
+          return;
+        }
+        this.variantPicker.updateAllButtonThumbs();
+        this.refresh();
+        this.recenterView();
+      } catch {
+        window.alert("Could not read layout file.");
+      }
+    };
+    reader.readAsText(file);
   }
 
   bindCanvas() {
@@ -110,16 +159,10 @@ export class EditorApplication {
       "wheel",
       (e) => {
         e.preventDefault();
-        const before = this.viz.clientToWorld(e.clientX, e.clientY);
-        const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
-        this.state.camera.zoom = this.state.clampZoom(
-          this.state.camera.zoom * factor
-        );
-        this.viz.applyCamera(this.state.camera);
-        const after = this.viz.clientToWorld(e.clientX, e.clientY);
-        this.state.camera.x += before.x - after.x;
-        this.state.camera.y += before.y - after.y;
-        this.refresh();
+        if (this.state.cycleActiveVariant(e.deltaY > 0 ? 1 : -1)) {
+          this.variantPicker.updateAllButtonThumbs();
+          this.refresh();
+        }
       },
       { passive: false }
     );
@@ -165,14 +208,25 @@ export class EditorApplication {
 
   onPointerDown(e) {
     if (e.button === 2) {
-      this.isPanning = true;
-      this.panStart = {
-        x: e.clientX,
-        y: e.clientY,
-        camX: this.state.camera.x,
-        camY: this.state.camera.y,
-      };
-      this.viz.setCursorMode("panning");
+      if (e.ctrlKey || e.metaKey) {
+        this.isZooming = true;
+        this.zoomStart = {
+          y: e.clientY,
+          zoom: this.state.camera.zoom,
+          anchorX: e.clientX,
+          anchorY: e.clientY,
+        };
+        this.viz.setCursorMode("zooming");
+      } else {
+        this.isPanning = true;
+        this.panStart = {
+          x: e.clientX,
+          y: e.clientY,
+          camX: this.state.camera.x,
+          camY: this.state.camera.y,
+        };
+        this.viz.setCursorMode("panning");
+      }
       return;
     }
 
@@ -219,6 +273,26 @@ export class EditorApplication {
       const dy = e.clientY - this.panStart.y;
       this.state.camera.x = this.panStart.camX - dx / this.state.camera.zoom;
       this.state.camera.y = this.panStart.camY - dy / this.state.camera.zoom;
+      this.refresh();
+      return;
+    }
+
+    if (this.isZooming) {
+      const dy = e.clientY - this.zoomStart.y;
+      const factor = Math.pow(1.002, -dy);
+      const newZoom = this.state.clampZoom(this.zoomStart.zoom * factor);
+      const before = this.viz.clientToWorld(
+        this.zoomStart.anchorX,
+        this.zoomStart.anchorY
+      );
+      this.state.camera.zoom = newZoom;
+      this.viz.applyCamera(this.state.camera);
+      const after = this.viz.clientToWorld(
+        this.zoomStart.anchorX,
+        this.zoomStart.anchorY
+      );
+      this.state.camera.x += before.x - after.x;
+      this.state.camera.y += before.y - after.y;
       this.refresh();
       return;
     }
@@ -270,6 +344,7 @@ export class EditorApplication {
   onPointerUp(e) {
     if (e.button === 2) {
       this.isPanning = false;
+      this.isZooming = false;
       this.viz.setCursorMode(null);
     }
     if (e.button === 0) {

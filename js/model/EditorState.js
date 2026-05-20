@@ -26,6 +26,69 @@ export class EditorState {
     this.activeVariantByType[type] = Math.max(0, Math.min(variantIndex, max));
   }
 
+  cycleActiveVariant(direction) {
+    const def = PIECE_TYPES[this.activeType];
+    const count = def.variants.length;
+    if (count <= 1) return false;
+    const current = this.getActiveVariantIndex();
+    const next = (current + direction + count) % count;
+    this.setActiveVariant(this.activeType, next);
+    return true;
+  }
+
+  exportLayout() {
+    return {
+      version: 1,
+      pieces: this.pieces.map(({ type, variantIndex, gx, gy, color }) => ({
+        type,
+        variantIndex,
+        gx,
+        gy,
+        color,
+      })),
+    };
+  }
+
+  importLayout(data) {
+    if (!data || data.version !== 1 || !Array.isArray(data.pieces)) {
+      return false;
+    }
+
+    const imported = [];
+    for (const raw of data.pieces) {
+      const def = PIECE_TYPES[raw?.type];
+      if (!def) return false;
+      const variantIndex = Number(raw.variantIndex);
+      if (
+        !Number.isInteger(variantIndex) ||
+        variantIndex < 0 ||
+        variantIndex >= def.variants.length
+      ) {
+        return false;
+      }
+      const gx = Number(raw.gx);
+      const gy = Number(raw.gy);
+      if (!Number.isInteger(gx) || !Number.isInteger(gy)) return false;
+
+      imported.push({
+        id: imported.length + 1,
+        type: raw.type,
+        variantIndex,
+        gx,
+        gy,
+        color:
+          typeof raw.color === "string" && raw.color
+            ? raw.color
+            : def.color,
+      });
+    }
+
+    this.pieces = imported;
+    this.nextId = imported.length + 1;
+    this.clearSelection();
+    return true;
+  }
+
   findPiece(id) {
     return this.pieces.find((p) => p.id === id) ?? null;
   }
@@ -191,6 +254,14 @@ export class EditorState {
 
   clearPlacementPreview() {
     this.placementPreview = null;
+  }
+
+  syncPlacementPreviewWithActive() {
+    if (!this.placementPreview || this.selectedIds.size > 0) return;
+    const def = PIECE_TYPES[this.activeType];
+    this.placementPreview.type = this.activeType;
+    this.placementPreview.variantIndex = this.getActiveVariantIndex();
+    this.placementPreview.color = def.color;
   }
 
   tryMoveSelected(dragStartGrid, dragPieceStarts, targetGx, targetGy) {

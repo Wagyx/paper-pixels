@@ -90,7 +90,7 @@ export class SvgVisualization {
   }
 
   setCursorMode(mode) {
-    this.svg.classList.remove("panning", "dragging-pieces");
+    this.svg.classList.remove("panning", "dragging-pieces", "zooming");
     if (mode) this.svg.classList.add(mode);
   }
 

@@ -186,6 +186,23 @@ body {
   cursor: pointer;
 }
 
+.io-tools {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .selection-tools {
   display: flex;
   align-items: center;
@@ -267,6 +284,10 @@ body {
 
 .grid-svg.panning {
   cursor: grabbing;
+}
+
+.grid-svg.zooming {
+  cursor: ns-resize;
 }
 
 .grid-svg.dragging-pieces {
