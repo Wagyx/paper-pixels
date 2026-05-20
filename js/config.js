@@ -29,6 +29,7 @@ export const PIECE_TYPES = {
       { name: "D", connectors: [1, 0, 1, 1, 0, 1, 0, 0] },
       { name: "E", connectors: [0, 0, 1, 0, 1, 1, 0, 1] },
       { name: "F", connectors: [0, 1, 0, 0, 1, 0, 1, 1] },
+      { name: "G", connectors: [0, 0, 0, 0, 0, 0, 0, 0] },
     ],
   },
   "2x1": {
@@ -38,6 +39,7 @@ export const PIECE_TYPES = {
     variants: [
       { name: "A", connectors: [1, 0, 1, 0, 1, 0] },
       { name: "B", connectors: [0, 1, 0, 1, 0, 1] },
+      { name: "C", connectors: [0, 0, 0, 0, 0, 0] },
     ],
   },
   "1x2": {
@@ -47,6 +49,7 @@ export const PIECE_TYPES = {
     variants: [
       { name: "A", connectors: [1, 0, 1, 0, 1, 0] },
       { name: "B", connectors: [0, 1, 0, 1, 0, 1] },
+      { name: "C", connectors: [0, 0, 0, 0, 0, 0] },
     ],
   },
   "1x1": {
@@ -56,6 +59,7 @@ export const PIECE_TYPES = {
     variants: [
       { name: "A", connectors: [1, 0, 1, 0] },
       { name: "B", connectors: [0, 1, 0, 1] },
+      { name: "C", connectors: [0, 0, 0, 0] },
     ],
   },
 };
