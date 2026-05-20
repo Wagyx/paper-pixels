@@ -36,6 +36,7 @@ new EditorApplication(state, visualization, {
   showConnectorsCheckbox: document.getElementById("showConnectors"),
   showGridCheckbox: document.getElementById("showGrid"),
   solveBtn: document.getElementById("solveBtn"),
+  summaryBtn: document.getElementById("summaryBtn"),
   exportBtn: document.getElementById("exportBtn"),
   importBtn: document.getElementById("importBtn"),
   importFileInput: document.getElementById("importFileInput"),

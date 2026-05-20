@@ -1,4 +1,5 @@
 import { PieceVariantPicker } from "./PieceVariantPicker.js";
+import { PieceSummary } from "./PieceSummary.js";
 
 export class EditorApplication {
   constructor(state, visualization, ui) {
@@ -21,6 +22,8 @@ export class EditorApplication {
       ui.pieceButtons,
       () => this.onVariantChange()
     );
+
+    this.pieceSummary = new PieceSummary(() => this.state.pieces);
 
     this.bindToolbar();
     this.bindCanvas();
@@ -95,6 +98,7 @@ export class EditorApplication {
       importBtn,
       importFileInput,
       solveBtn,
+      summaryBtn,
     } = this.ui;
 
     showGridCheckbox.addEventListener("change", () => {
@@ -135,6 +139,8 @@ export class EditorApplication {
     });
 
     solveBtn.addEventListener("click", () => this.runVariantSolver());
+
+    summaryBtn.addEventListener("click", () => this.pieceSummary.open());
   }
 
   runVariantSolver() {
