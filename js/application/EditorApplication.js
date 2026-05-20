@@ -321,6 +321,15 @@ export class EditorApplication {
       return;
     }
 
+    if (this.state.selectedIds.size > 0) {
+      if (!e.ctrlKey && !e.metaKey) {
+        this.state.clearSelection();
+        this.updateToolbarUI();
+        this.refresh();
+      }
+      return;
+    }
+
     if (!e.ctrlKey && !e.metaKey) {
       this.state.clearSelection();
       this.updateToolbarUI();
