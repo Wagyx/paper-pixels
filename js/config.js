@@ -1,3 +1,5 @@
+export const APP_VERSION = "1.0.0";
+
 export const CELL = 32;
 export const PIECE_PAD = 1;
 export const MIN_ZOOM = 0.25;

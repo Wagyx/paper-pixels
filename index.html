@@ -3,13 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Place puzzle pieces on a square grid and export your layouts.">
+  <meta name="theme-color" content="#3d6b5a">
+  <meta name="color-scheme" content="light">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Paper Pixels">
   <title>Paper Pixels — Grid Editor</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app">
     <header class="toolbar">
-      <h1 class="logo">Paper Pixels</h1>
+      <h1 class="logo">
+        <img src="icons/icon.svg" alt="" class="logo-icon" width="32" height="32" aria-hidden="true">
+        <span class="logo-title">Paper Pixels</span>
+        <span class="logo-version" id="appVersion"></span>
+      </h1>
       <div class="piece-selector" role="group" aria-label="Piece type">
         <button type="button" class="piece-btn active" data-type="2x2" title="2×2 — choose connector variant">
           <span class="piece-thumb" aria-hidden="true"></span>
@@ -72,6 +86,7 @@
     </main>
   </div>
 
+  <script src="js/pwa.js" defer></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

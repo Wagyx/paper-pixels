@@ -1,7 +1,7 @@
 import { EditorApplication } from "./application/EditorApplication.js";
 import { EditorState } from "./model/EditorState.js";
 import { connectorSlotCount } from "./model/connectors.js";
-import { PIECE_TYPES } from "./config.js";
+import { APP_VERSION, PIECE_TYPES } from "./config.js";
 import { SvgVisualization } from "./visualization/SvgVisualization.js";
 
 for (const type of Object.keys(PIECE_TYPES)) {
@@ -19,6 +19,9 @@ for (const type of Object.keys(PIECE_TYPES)) {
     }
   });
 }
+
+const appVersionEl = document.getElementById("appVersion");
+if (appVersionEl) appVersionEl.textContent = `v${APP_VERSION}`;
 
 const state = new EditorState();
 const visualization = new SvgVisualization(document.getElementById("gridSvg"));
