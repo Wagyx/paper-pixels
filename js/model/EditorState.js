@@ -6,6 +6,7 @@ import {
   PIECE_TYPES,
 } from "../config.js";
 import { validateConnectorAdjacency } from "./connectorCompatibility.js";
+import { solvePieceVariants } from "./variantSolver.js";
 
 export class EditorState {
   constructor() {
@@ -243,6 +244,38 @@ export class EditorState {
     this.pieces = this.pieces.filter((p) => !this.selectedIds.has(p.id));
     this.selectedIds.clear();
     this.placementPreview = null;
+  }
+
+  /**
+   * @returns {{ applied: boolean, success: boolean, upgradedCount: number, unsatisfiedConnections: number }}
+   */
+  applyVariantSolver() {
+    if (this.pieces.length === 0) {
+      return {
+        applied: false,
+        success: true,
+        upgradedCount: 0,
+        unsatisfiedConnections: 0,
+      };
+    }
+
+    const { pieces, success, upgradedCount, unsatisfiedConnections } =
+      solvePieceVariants(this.pieces);
+
+    const variantById = new Map(pieces.map((p) => [p.id, p.variantIndex]));
+
+    for (const piece of this.pieces) {
+      const variantIndex = variantById.get(piece.id);
+      if (variantIndex != null) piece.variantIndex = variantIndex;
+    }
+
+    this.clearSelection();
+    return {
+      applied: true,
+      success,
+      upgradedCount,
+      unsatisfiedConnections,
+    };
   }
 
   applyColorToSelected(color) {

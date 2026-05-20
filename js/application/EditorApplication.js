@@ -94,6 +94,7 @@ export class EditorApplication {
       exportBtn,
       importBtn,
       importFileInput,
+      solveBtn,
     } = this.ui;
 
     showGridCheckbox.addEventListener("change", () => {
@@ -132,6 +133,24 @@ export class EditorApplication {
       if (!file) return;
       this.importLayoutFromFile(file);
     });
+
+    solveBtn.addEventListener("click", () => this.runVariantSolver());
+  }
+
+  runVariantSolver() {
+    const result = this.state.applyVariantSolver();
+    if (!result.applied) return;
+
+    this.variantPicker.updateAllButtonThumbs();
+    this.refresh();
+
+    if (!result.success) {
+      const edgeLabel =
+        result.unsatisfiedConnections === 1 ? "connection" : "connections";
+      window.alert(
+        `Could not find a complete solution. Applied the best attempt with ${result.unsatisfiedConnections} ${edgeLabel} still not paired as male/female.`
+      );
+    }
   }
 
   exportLayout() {

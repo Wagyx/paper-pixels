@@ -18,6 +18,7 @@ const PRECACHE_URLS = [
   "./js/model/EditorState.js",
   "./js/model/connectors.js",
   "./js/model/connectorCompatibility.js",
+  "./js/model/variantSolver.js",
   "./js/visualization/SvgVisualization.js",
   "./js/visualization/pieceGraphics.js",
   "./js/visualization/pieceGeometry.js",
