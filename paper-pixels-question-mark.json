@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "pieces": [
+    {
+      "type": "2x2",
+      "variantIndex": 1,
+      "gx": -10,
+      "gy": -5,
+      "color": "#008600"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 0,
+      "gx": -10,
+      "gy": -6,
+      "color": "#06ac51"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 1,
+      "gx": -8,
+      "gy": -6,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 2,
+      "gx": -9,
+      "gy": -3,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "1x2",
+      "variantIndex": 0,
+      "gx": -8,
+      "gy": -5,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 1,
+      "gx": -9,
+      "gy": -7,
+      "color": "#06ac51"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 2,
+      "gx": -6,
+      "gy": -7,
+      "color": "#06ac51"
+    },
+    {
+      "type": "1x1",
+      "variantIndex": 1,
+      "gx": -7,
+      "gy": -7,
+      "color": "#89e4b5"
+    },
+    {
+      "type": "1x1",
+      "variantIndex": 1,
+      "gx": -6,
+      "gy": -6,
+      "color": "#cccccc"
+    },
+    {
+      "type": "1x1",
+      "variantIndex": 1,
+      "gx": -6,
+      "gy": -3,
+      "color": "#89e4b5"
+    },
+    {
+      "type": "2x2",
+      "variantIndex": 1,
+      "gx": -5,
+      "gy": -4,
+      "color": "#008600"
+    },
+    {
+      "type": "2x2",
+      "variantIndex": 2,
+      "gx": -5,
+      "gy": -6,
+      "color": "#008600"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 2,
+      "gx": -4,
+      "gy": -2,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "1x2",
+      "variantIndex": 1,
+      "gx": -3,
+      "gy": -4,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "2x2",
+      "variantIndex": 2,
+      "gx": -7,
+      "gy": -2,
+      "color": "#008600"
+    },
+    {
+      "type": "1x2",
+      "variantIndex": 0,
+      "gx": -5,
+      "gy": -2,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "1x1",
+      "variantIndex": 1,
+      "gx": -5,
+      "gy": 0,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "1x1",
+      "variantIndex": 1,
+      "gx": -6,
+      "gy": 0,
+      "color": "#8f8f8f"
+    },
+    {
+      "type": "2x2",
+      "variantIndex": 2,
+      "gx": -7,
+      "gy": 1,
+      "color": "#008600"
+    },
+    {
+      "type": "1x1",
+      "variantIndex": 1,
+      "gx": -5,
+      "gy": 2,
+      "color": "#cccccc"
+    },
+    {
+      "type": "2x1",
+      "variantIndex": 1,
+      "gx": -6,
+      "gy": 3,
+      "color": "#8f8f8f"
+    }
+  ]
+}
