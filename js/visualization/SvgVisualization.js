@@ -6,7 +6,6 @@ import {
   updatePieceBody,
   updateSelectionRing,
 } from "./pieceGraphics.js";
-import { createConnectorElements } from "./connectorPaths.js";
 
 function createSvg(name, attrs) {
   const el = document.createElementNS(SVG_NS, name);
@@ -27,8 +26,6 @@ export class SvgVisualization {
     this.previewLayer = svgElement.querySelector("#previewLayer");
 
     this.bodiesLayer = this.piecesLayer.querySelector("#piecesBodiesLayer");
-    this.femaleLayer = this.piecesLayer.querySelector("#piecesFemaleConnectorsLayer");
-    this.maleLayer = this.piecesLayer.querySelector("#piecesMaleConnectorsLayer");
     this.ringsLayer = this.piecesLayer.querySelector("#piecesRingsLayer");
 
     this.pieceParts = new Map();
@@ -170,43 +167,22 @@ export class SvgVisualization {
     this.gridLayer.prepend(this.interactionPlane);
   }
 
-  removePieceConnectors(pieceId) {
-    const id = String(pieceId);
-    this.femaleLayer
-      .querySelectorAll(`[data-piece-id="${id}"]`)
-      .forEach((node) => node.remove());
-    this.maleLayer
-      .querySelectorAll(`[data-piece-id="${id}"]`)
-      .forEach((node) => node.remove());
-  }
-
-  clearAllConnectors() {
-    this.femaleLayer.replaceChildren();
-    this.maleLayer.replaceChildren();
-  }
-
-  setPieceConnectors(piece) {
-    this.removePieceConnectors(piece.id);
-    if (!this.showConnectors) return;
-    const { female, male } = createConnectorElements(piece, piece.color);
-    female.forEach((node) => this.femaleLayer.appendChild(node));
-    male.forEach((node) => this.maleLayer.appendChild(node));
-  }
-
   upsertPiece(piece, isSelected) {
     let parts = this.pieceParts.get(piece.id);
+    const showConnectors = this.showConnectors;
 
     if (!parts) {
-      const body = createPieceBody(piece, { dataId: piece.id });
+      const body = createPieceBody(piece, {
+        dataId: piece.id,
+        showConnectors,
+      });
       const ring = createSelectionRing(piece);
       this.bodiesLayer.appendChild(body);
       this.ringsLayer.appendChild(ring);
-      this.setPieceConnectors(piece);
       parts = { body, ring };
       this.pieceParts.set(piece.id, parts);
     } else {
-      updatePieceBody(parts.body, piece);
-      this.setPieceConnectors(piece);
+      updatePieceBody(parts.body, piece, { showConnectors });
     }
 
     parts.body.classList.toggle("selected", isSelected);
@@ -218,16 +194,11 @@ export class SvgVisualization {
     if (!parts) return;
     parts.body.remove();
     parts.ring.remove();
-    this.removePieceConnectors(pieceId);
     this.pieceParts.delete(pieceId);
   }
 
   renderPieces(pieces, selectedIds, showConnectors = this.showConnectors) {
     this.showConnectors = showConnectors;
-
-    if (!showConnectors) {
-      this.clearAllConnectors();
-    }
 
     const ids = new Set(pieces.map((p) => p.id));
 

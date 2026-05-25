@@ -1,6 +1,6 @@
 import { CELL, SVG_NS } from "../config.js";
-import { createConnectorElements } from "./connectorPaths.js";
-import { pieceFootprintAttrs, pieceRectAttrs } from "./pieceGeometry.js";
+import { pieceFootprintAttrs } from "./pieceGeometry.js";
+import { pieceOutlinePath } from "./pieceOutlinePath.js";
 
 function createSvg(name, attrs) {
   const el = document.createElementNS(SVG_NS, name);
@@ -20,26 +20,26 @@ function hexWithAlpha(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+function pieceFill(piece, options = {}) {
+  const { isPreview = false, previewValid = true } = options;
+  if (isPreview && !previewValid) return "rgba(200, 80, 80, 0.35)";
+  if (isPreview) return hexWithAlpha(piece.color, 0.55);
+  return piece.color;
+}
+
 export function createPieceBody(piece, options = {}) {
   const {
     isPreview = false,
     previewValid = true,
     cellSize = CELL,
     dataId = piece.id,
+    showConnectors = true,
   } = options;
 
-  const bodyAttrs = pieceRectAttrs(piece, cellSize);
-  let fill = piece.color;
-  if (isPreview && !previewValid) fill = "rgba(200, 80, 80, 0.35)";
-  else if (isPreview) fill = hexWithAlpha(piece.color, 0.55);
-
-  const body = createSvg("rect", {
+  const body = createSvg("path", {
     class: "piece-body",
-    x: bodyAttrs.x,
-    y: bodyAttrs.y,
-    width: bodyAttrs.width,
-    height: bodyAttrs.height,
-    fill,
+    d: pieceOutlinePath(piece, cellSize, { includeConnectors: showConnectors }),
+    fill: pieceFill(piece, { isPreview, previewValid }),
   });
 
   if (dataId != null) {
@@ -69,17 +69,18 @@ export function createSelectionRing(piece, options = {}) {
 }
 
 export function updatePieceBody(body, piece, options = {}) {
-  const { isPreview = false, previewValid = true, cellSize = CELL } = options;
-  const bodyAttrs = pieceRectAttrs(piece, cellSize);
-  let fill = piece.color;
-  if (isPreview && !previewValid) fill = "rgba(200, 80, 80, 0.35)";
-  else if (isPreview) fill = hexWithAlpha(piece.color, 0.55);
+  const {
+    isPreview = false,
+    previewValid = true,
+    cellSize = CELL,
+    showConnectors = true,
+  } = options;
 
-  body.setAttribute("x", bodyAttrs.x);
-  body.setAttribute("y", bodyAttrs.y);
-  body.setAttribute("width", bodyAttrs.width);
-  body.setAttribute("height", bodyAttrs.height);
-  body.setAttribute("fill", fill);
+  body.setAttribute(
+    "d",
+    pieceOutlinePath(piece, cellSize, { includeConnectors: showConnectors })
+  );
+  body.setAttribute("fill", pieceFill(piece, { isPreview, previewValid }));
 }
 
 export function updateSelectionRing(ring, piece, isSelected, cellSize = CELL) {
@@ -91,7 +92,6 @@ export function updateSelectionRing(ring, piece, isSelected, cellSize = CELL) {
   ring.classList.toggle("visible", isSelected);
 }
 
-/** Preview / toolbar: bodies, then female, then male within one group. */
 export function buildPieceGroup(piece, options = {}) {
   const {
     isSelected = false,
@@ -112,25 +112,10 @@ export function buildPieceGroup(piece, options = {}) {
     previewValid,
     cellSize,
     dataId: null,
+    showConnectors,
   });
 
-  g.append(body);
-
-  const showPreviewConnectors = !isPreview || previewValid;
-  if (showConnectors && showPreviewConnectors) {
-    const { female, male } = createConnectorElements(
-      piece,
-      piece.color,
-      cellSize
-    );
-    const femaleLayer = createSvg("g", { class: "piece-connectors-female" });
-    const maleLayer = createSvg("g", { class: "piece-connectors-male" });
-    female.forEach((node) => femaleLayer.appendChild(node));
-    male.forEach((node) => maleLayer.appendChild(node));
-    g.append(femaleLayer, maleLayer);
-  }
-
-  g.append(ring);
+  g.append(body, ring);
   g.classList.toggle("selected", isSelected);
   if (isPreview) g.classList.toggle("invalid", !previewValid);
 

@@ -372,28 +372,12 @@ body {
 }
 
 .pieces-bodies-layer,
-.pieces-female-layer,
-.pieces-male-layer,
 .pieces-rings-layer {
   pointer-events: none;
 }
 
 .piece-body {
   pointer-events: all;
-}
-
-.piece-connectors-female,
-.piece-connectors-male {
-  pointer-events: none;
-}
-
-.connector {
-  pointer-events: none;
-  stroke: none;
-}
-
-.connector-male-bridge {
-  pointer-events: none;
 }
 
 .piece-preview-group .selection-ring {

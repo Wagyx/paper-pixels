@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.0.0";
+export const APP_VERSION = "1.1.0";
 
 export const CELL = 32;
 export const PIECE_PAD = 1;
@@ -40,6 +40,7 @@ export const PIECE_TYPES = {
       { name: "0", connectors: [0, 0, 0, 0, 0, 0] },
       { name: "A", connectors: [1, 0, 1, 0, 1, 0] },
       { name: "B", connectors: [0, 1, 0, 1, 0, 1] },
+      { name: "C", connectors: [1, 1, 0, 1, 1, 0] },
     ],
   },
   "1x2": {
@@ -50,6 +51,7 @@ export const PIECE_TYPES = {
       { name: "0", connectors: [0, 0, 0, 0, 0, 0] },
       { name: "A", connectors: [1, 0, 1, 0, 1, 0] },
       { name: "B", connectors: [0, 1, 0, 1, 0, 1] },
+      { name: "C", connectors: [0, 1, 1, 0, 1, 1] },
     ],
   },
   "1x1": {

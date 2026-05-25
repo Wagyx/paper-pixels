@@ -25,6 +25,7 @@ const PRECACHE_URLS = [
   "./js/visualization/SvgVisualization.js",
   "./js/visualization/pieceGraphics.js",
   "./js/visualization/pieceGeometry.js",
+  "./js/visualization/pieceOutlinePath.js",
   "./js/visualization/connectorPaths.js",
   "./js/visualization/variantPreview.js",
 ];
